@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run globalfilters Playwright spec",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"playwright",
+				"test",
+				"tests/globalfilters/globalfilters.spec.ts"
+			],
+			"isBackground": false
+		}
+	]
+}
