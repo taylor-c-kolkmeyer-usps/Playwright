@@ -1,32 +1,13 @@
 // Reusable locators for Global Filter components.
-// These target Angular Material select controls by visible label first, with
-// accessibility and automation-id fallbacks to support minor markup variations.
+// IDs confirmed from live DOM inspection on /work-hours (May 2026).
 export const GLOBAL_FILTER_SELECTORS = {
-  districtDivisionDropdown: [
-    'mat-form-field:has-text("District/Division") .mat-mdc-select-trigger',
-    'mat-form-field:has-text("District Division") .mat-mdc-select-trigger',
-    '[aria-label="District/Division"]',
-    '[aria-label="District Division"]',
-    '[data-automation-id="district-division-dropdown"]',
-  ].join(', '),
-  districtDivisionDropdownValues: [
-    'mat-option .mdc-list-item__primary-text',
-    '.mat-mdc-option .mdc-list-item__primary-text',
-    'mat-option',
-    '.mat-mdc-option',
-  ].join(', '),
-  areaRegionDropdown: [
-    'mat-form-field:has-text("Area/Region") .mat-mdc-select-trigger',
-    'mat-form-field:has-text("Area Region") .mat-mdc-select-trigger',
-    '[aria-label="Area/Region"]',
-    '[aria-label="Area Region"]',
-    '[data-automation-id="area-region-dropdown"]',
-  ].join(', '),
-  areaRegionDropdownValues: [
-    'mat-option .mdc-list-item__primary-text',
-    '.mat-mdc-option .mdc-list-item__primary-text',
-    'mat-option',
-    '.mat-mdc-option',
-  ].join(', '),
-  overlayBackdrop:                '.cdk-overlay-backdrop',
+  // #district-division-select is the mat-select element; clicking it opens the panel.
+  districtDivisionDropdown: '#district-division-select',
+  // Options render in a CDK overlay panel. Use only the inner text span to avoid
+  // double-matching both the span and the parent mat-option element.
+  districtDivisionDropdownValues: 'mat-option .mdc-list-item__primary-text',
+  // #area-region-select confirmed id from DOM inspection.
+  areaRegionDropdown: '#area-region-select',
+  areaRegionDropdownValues: 'mat-option .mdc-list-item__primary-text',
+  overlayBackdrop: '.cdk-overlay-backdrop',
 };

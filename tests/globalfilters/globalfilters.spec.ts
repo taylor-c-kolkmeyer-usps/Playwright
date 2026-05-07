@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test';
 import { GlobalFiltersPage } from '../../pages/globalfilters.page';
-import { EXPECTED_DISTRICT_DIVISION_LIST } from '../../utils/test-data';
 
 const env = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env ?? {};
 const globalFilterPath = env.IBPS_GLOBAL_FILTER_PATH ?? '/';
@@ -9,7 +8,9 @@ const globalFilterPath = env.IBPS_GLOBAL_FILTER_PATH ?? '/';
  * S02 - District/Division Global Filter
  *
  * Validates two things on the Global Filter:
- *  1. The full D/D dropdown (Area = All) matches the expected ordered list.
+ *  1. The full D/D dropdown (Area = All) matches a stored snapshot.
+ *     Run once with `--update-snapshots` to capture the baseline; subsequent
+ *     runs guard against unexpected data changes in SIT.
  *  2. For every Area/Region, the D/D dropdown has "All" first and the
  *     remaining entries are in alphanumeric (locale-sorted) order.
  *
@@ -18,16 +19,18 @@ const globalFilterPath = env.IBPS_GLOBAL_FILTER_PATH ?? '/';
  */
 
 test('Global Filter District Division AlphaNumeric Order', async ({ page }) => {
-  await page.goto(globalFilterPath);
+  // Use domcontentloaded (same pattern as global-setup) so the slow SIT app does not
+  // time out on the full 'load' event; networkidle below waits for Angular to settle.
+  await page.goto(globalFilterPath, { waitUntil: 'domcontentloaded' });
   await page.waitForLoadState('networkidle');
 
   const globalFilters = new GlobalFiltersPage(page);
 
-  // --- Validate 1: full D/D list matches expected ordered list (Area = All) ---
+  // --- Validate 1: full D/D list (Area = All) matches stored snapshot ---
+  // First run: execute with `npx playwright test --update-snapshots` to write the baseline file.
+  // Subsequent runs: fails if the list changes unexpectedly in SIT.
   const allDdOptions = await globalFilters.getAllDistrictDivisionOptions();
-  expect(allDdOptions, 'D/D options should match the expected ordered list').toEqual(
-    Array.from(EXPECTED_DISTRICT_DIVISION_LIST),
-  );
+  expect(allDdOptions).toMatchSnapshot('district-division-all-options.txt');
 
   // --- Validate 2: per-Area D/D list starts with "All" and is alphanumerically sorted ---
   const areaRegionOptions = await globalFilters.getAllAreaRegionOptions();

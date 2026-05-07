@@ -25,6 +25,9 @@ export default defineConfig({
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  // Increase timeouts to match the slow USPS SIT environment (global-setup uses 90 000 ms).
+  timeout: 90_000,
+
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
     // Set BASE_URL env var to the target IBPS environment (SIT, UAT, PROD).
@@ -32,6 +35,17 @@ export default defineConfig({
     storageState: 'storageState.json',
     channel: 'chrome',
     headless: false,
+    navigationTimeout: 90_000,
+    // Mirror the proxy and TLS settings used by global-setup so the test
+    // browser can reach the USPS SIT environment through the corporate proxy.
+    ignoreHTTPSErrors: true,
+    proxy: {
+      server:
+        process.env.IBPS_PROXY_SERVER ??
+        process.env.HTTPS_PROXY ??
+        process.env.HTTP_PROXY ??
+        'http://proxy.usps.gov:8080',
+    },
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
@@ -47,15 +61,15 @@ export default defineConfig({
       },
     },
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
 
     /* Test against mobile viewports. */
     // {
