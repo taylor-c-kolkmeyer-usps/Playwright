@@ -77,32 +77,17 @@ type SetupSession = {
         page: Page;
 };
 
-async function launchSetupSession(
-        proxyServer: string | undefined,
-        customUserAgent: string,
-        proxyUsername?: string,
-        proxyPassword?: string,
-): Promise<SetupSession> {
-        const launchOptions = {
+const CHROME_USER_DATA_DIR = path.resolve(__dirname, '.playwright-chrome-profile');
+
+async function launchSetupSession(): Promise<SetupSession> {
+        const context = await chromium.launchPersistentContext(CHROME_USER_DATA_DIR, {
                 channel: 'chrome' as const,
                 headless: false,
-        };
-        const proxyConfig = proxyServer
-                ? {
-                        server: proxyServer,
-                        username: proxyUsername,
-                        password: proxyPassword,
-                  }
-                : undefined;
-        const contextOptions = {
                 ignoreHTTPSErrors: true,
-                proxy: proxyConfig,
-                userAgent: customUserAgent,
-        };
-
-        const browser = await chromium.launch(launchOptions);
-        const context = await browser.newContext(contextOptions);
+        });
         const page = await context.newPage();
+        // launchPersistentContext has no separate Browser handle; use a shim.
+        const browser = context.browser()!;
         return { browser, context, page };
 }
 
@@ -111,16 +96,9 @@ export default async function globalSetup(): Promise<void> {
         const aceIdBaseUrl = requireEnv('IBPS_APPLICATION_ACE_ID');
         const ibpsUser = resolveIbpsTokenUser(requireEnv('IBPS_USER'));
         const tokenBaseUrl = requireEnv('IBPS_APPLICATION_TOKEN');
-        const proxyServer =
-                optionalEnv('IBPS_PROXY_SERVER')
-                ?? optionalEnv('HTTPS_PROXY')
-                ?? optionalEnv('HTTP_PROXY');
-        const proxyUsername = optionalEnv('IBPS_PROXY_USERNAME');
-        const proxyPassword = optionalEnv('IBPS_PROXY_PASSWORD');
-        const customUserAgent = optionalEnv('IBPS_USER_AGENT') ?? 'Selenium';
         const navigationTimeoutMs = Number(optionalEnv('IBPS_NAV_TIMEOUT_MS') ?? '90000');
 
-        const { browser, context, page } = await launchSetupSession(proxyServer, customUserAgent, proxyUsername, proxyPassword);
+        const { browser, context, page } = await launchSetupSession();
         page.setDefaultNavigationTimeout(navigationTimeoutMs);
 
         try {
