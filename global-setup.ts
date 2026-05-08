@@ -80,14 +80,23 @@ type SetupSession = {
 async function launchSetupSession(
         proxyServer: string | undefined,
         customUserAgent: string,
+        proxyUsername?: string,
+        proxyPassword?: string,
 ): Promise<SetupSession> {
         const launchOptions = {
                 channel: 'chrome' as const,
                 headless: false,
         };
+        const proxyConfig = proxyServer
+                ? {
+                        server: proxyServer,
+                        username: proxyUsername,
+                        password: proxyPassword,
+                  }
+                : undefined;
         const contextOptions = {
                 ignoreHTTPSErrors: true,
-                proxy: proxyServer ? { server: proxyServer } : undefined,
+                proxy: proxyConfig,
                 userAgent: customUserAgent,
         };
 
@@ -105,12 +114,13 @@ export default async function globalSetup(): Promise<void> {
         const proxyServer =
                 optionalEnv('IBPS_PROXY_SERVER')
                 ?? optionalEnv('HTTPS_PROXY')
-                ?? optionalEnv('HTTP_PROXY')
-                ?? 'http://proxy.usps.gov:8080';
+                ?? optionalEnv('HTTP_PROXY');
+        const proxyUsername = optionalEnv('IBPS_PROXY_USERNAME');
+        const proxyPassword = optionalEnv('IBPS_PROXY_PASSWORD');
         const customUserAgent = optionalEnv('IBPS_USER_AGENT') ?? 'Selenium';
         const navigationTimeoutMs = Number(optionalEnv('IBPS_NAV_TIMEOUT_MS') ?? '90000');
 
-        const { browser, context, page } = await launchSetupSession(proxyServer, customUserAgent);
+        const { browser, context, page } = await launchSetupSession(proxyServer, customUserAgent, proxyUsername, proxyPassword);
         page.setDefaultNavigationTimeout(navigationTimeoutMs);
 
         try {

@@ -36,16 +36,7 @@ export default defineConfig({
     channel: 'chrome',
     headless: false,
     navigationTimeout: 90_000,
-    // Mirror the proxy and TLS settings used by global-setup so the test
-    // browser can reach the USPS SIT environment through the corporate proxy.
     ignoreHTTPSErrors: true,
-    proxy: {
-      server:
-        process.env.IBPS_PROXY_SERVER ??
-        process.env.HTTPS_PROXY ??
-        process.env.HTTP_PROXY ??
-        'http://proxy.usps.gov:8080',
-    },
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
