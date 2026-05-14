@@ -37,9 +37,6 @@ export default defineConfig({
     headless: false,
     navigationTimeout: 90_000,
     ignoreHTTPSErrors: true,
-    launchOptions: {
-      args: [`--user-data-dir=${require('path').resolve(__dirname, '.playwright-chrome-profile')}`],
-    },
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',

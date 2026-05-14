@@ -30,7 +30,7 @@ test('Global Filter District Division AlphaNumeric Order', async ({ page }) => {
   // First run: execute with `npx playwright test --update-snapshots` to write the baseline file.
   // Subsequent runs: fails if the list changes unexpectedly in SIT.
   const allDdOptions = await globalFilters.getAllDistrictDivisionOptions();
-  expect(allDdOptions).toMatchSnapshot('district-division-all-options.txt');
+  expect(allDdOptions.join('\n')).toMatchSnapshot('district-division-all-options.txt');
 
   // --- Validate 2: per-Area D/D list starts with "All" and is alphanumerically sorted ---
   const areaRegionOptions = await globalFilters.getAllAreaRegionOptions();
