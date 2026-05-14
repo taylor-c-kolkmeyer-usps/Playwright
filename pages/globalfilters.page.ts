@@ -23,7 +23,7 @@ export class GlobalFiltersPage extends BasePage {
     await this.ddDropdown.click();
     await this.ddDropdownValues.first().waitFor({ state: 'visible' });
     const options = await this.ddDropdownValues.allTextContents();
-    await this.overlayBackdrop.click();
+    await this.page.keyboard.press('Escape');
     await this.ddDropdownValues.first().waitFor({ state: 'hidden' });
     return options.map(o => o.trim());
   }
@@ -33,7 +33,7 @@ export class GlobalFiltersPage extends BasePage {
     await this.areaRegionDropdown.click();
     await this.areaRegionDropdownValues.first().waitFor({ state: 'visible' });
     const options = await this.areaRegionDropdownValues.allTextContents();
-    await this.overlayBackdrop.click();
+    await this.page.keyboard.press('Escape');
     await this.areaRegionDropdownValues.first().waitFor({ state: 'hidden' });
     return options.map(o => o.trim()).filter(o => o !== 'All');
   }
@@ -48,7 +48,7 @@ export class GlobalFiltersPage extends BasePage {
     await this.ddDropdown.click();
     await this.ddDropdownValues.first().waitFor({ state: 'visible' });
     const options = await this.ddDropdownValues.allTextContents();
-    await this.overlayBackdrop.click();
+    await this.page.keyboard.press('Escape');
     await this.ddDropdownValues.first().waitFor({ state: 'hidden' });
     return options.map(o => o.trim());
   }
