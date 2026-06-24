@@ -28,6 +28,7 @@ test('Global Filter District Division AlphaNumeric Order', async ({ page }) => {
 
   // --- Validate 1: full D/D list (Area = All) matches stored snapshot ---
   // First run: execute with `npx playwright test --update-snapshots` to write the baseline file.
+  // last snapshot was taken 6/24/2026
   // Subsequent runs: fails if the list changes unexpectedly in SIT.
   const allDdOptions = await globalFilters.getAllDistrictDivisionOptions();
   expect(allDdOptions.join('\n')).toMatchSnapshot('district-division-all-options.txt');
