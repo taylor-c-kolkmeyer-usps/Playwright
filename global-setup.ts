@@ -84,6 +84,13 @@ async function launchSetupSession(): Promise<SetupSession> {
                 channel: 'chrome' as const,
                 headless: env.HEADED !== 'true',
                 ignoreHTTPSErrors: true,
+                // Tell Chrome to auto-negotiate Windows NTLM/Kerberos with the corporate proxy
+                // so the native 407 auth dialog never appears (blocks headless runs).
+                proxy: { server: 'http://56.0.142.24:8080' },
+                args: [
+                        '--auth-server-whitelist=56.0.142.24',
+                        '--auth-negotiate-delegate-whitelist=56.0.142.24',
+                ],
         });
         const page = await context.newPage();
         // launchPersistentContext has no separate Browser handle; use a shim.

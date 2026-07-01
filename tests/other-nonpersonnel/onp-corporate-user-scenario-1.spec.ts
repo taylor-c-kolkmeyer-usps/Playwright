@@ -53,4 +53,7 @@ test('ONP Corporate User Scenario 1', async ({ page }) => {
   // Step 4: Confirm the selection criteria by clicking OK.
   await page.locator(ONP_SELECTORS.selectionCriteriaOkBtn).click();
   await page.waitForLoadState('networkidle');
+
+  // Pause here to inspect browser state (remove when test is complete; requires --headed).
+  await page.pause();
 });
