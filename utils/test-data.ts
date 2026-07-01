@@ -1,3 +1,10 @@
+// ONP Corporate User - Scenario 1 constants.
+// Finance Number and line numbers confirmed from Selenium source (S02).
+export const ONP_SCENARIO_1 = {
+  financeNumber: '102706',
+  lines: { rent: '41', depreciation: '43', informationTechnology: '46' },
+} as const;
+
 // Expected District/Division dropdown list in the application-defined display order.
 // Sourced directly from getDistrictDivisionList() in the original Java test.
 export const EXPECTED_DISTRICT_DIVISION_LIST: readonly string[] = [

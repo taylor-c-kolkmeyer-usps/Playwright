@@ -82,7 +82,7 @@ const CHROME_USER_DATA_DIR = path.resolve(__dirname, '.playwright-chrome-profile
 async function launchSetupSession(): Promise<SetupSession> {
         const context = await chromium.launchPersistentContext(CHROME_USER_DATA_DIR, {
                 channel: 'chrome' as const,
-                headless: false,
+                headless: env.HEADED !== 'true',
                 ignoreHTTPSErrors: true,
         });
         const page = await context.newPage();

@@ -34,7 +34,8 @@ export default defineConfig({
     baseURL: process.env.BASE_URL ?? 'https://ibps-sit.usps.gov/',
     storageState: 'storageState.json',
     channel: 'chrome',
-    headless: false,
+    // Headless by default. Set HEADED=true in .env (or CLI) to run with a visible browser.
+    headless: process.env.HEADED !== 'true',
     navigationTimeout: 90_000,
     ignoreHTTPSErrors: true,
 
@@ -48,7 +49,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        headless: false
+        // headless: false
       },
     },
 
